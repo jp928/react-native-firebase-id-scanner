@@ -1,48 +1,45 @@
-//
-//  ScannerView.swift
-//  FirebaseIdScanner
-//
-//  Created by Jing tai Piao on 23/6/20.
-//  Copyright © 2020 Facebook. All rights reserved.
-//
-
 import UIKit
+import AVFoundation
 
-class ScannerView: UIView {
-    @objc var count = 0 {
-        didSet {
-//            button.setTitle(String(describing: count), for: .normal)
+class ScannerView: UIViewController, UINavigationControllerDelegate,UIImagePickerControllerDelegate{
+
+//Camera Capture requiered properties
+var imagePickers:UIImagePickerController?
+
+@IBOutlet weak var customCameraView: UIView!
+
+override func viewDidLoad() {
+    addCameraInView()
+    super.viewDidLoad()
+}
+
+func addCameraInView(){
+
+    imagePickers = UIImagePickerController()
+    if UIImagePickerController.isCameraDeviceAvailable( UIImagePickerController.CameraDevice.rear) {
+        imagePickers?.delegate = self
+        imagePickers?.sourceType = UIImagePickerController.SourceType.camera
+
+        //add as a childviewcontroller
+        addChild(imagePickers!)
+
+        // Add the child's View as a subview
+        self.customCameraView.addSubview((imagePickers?.view)!)
+        imagePickers?.view.frame = customCameraView.bounds
+        imagePickers?.allowsEditing = false
+        imagePickers?.showsCameraControls = false
+        imagePickers?.view.autoresizingMask = [.flexibleWidth,  .flexibleHeight]
         }
     }
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.addSubview(button)
-//        increment()
-    }
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    lazy var button: UIButton = {
-//        let b = UIButton.init(type: UIButton.ButtonType.custom)
-        let b = UIButton(type: UIButton.ButtonType.custom) as UIButton
-        b.setImage(UIImage(named: "camera"), for: .normal)
-        b.frame = CGRect(x: 10, y: 100, width: 100, height: 100)
-//        b.setTitle("testing", for: .normal)
-//        b.translatesAutoresizingMaskIntoConstraints = false
-        
-//        b.frame = .zero
-        b.tintColor = .white
-        b.backgroundColor = .orange
-//        b.titleLabel?.font = UIFont.systemFont(ofSize: 50)
-//        b.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        b.addTarget(
-            self,
-            action: #selector(increment),
-            for: .touchUpInside
-        )
-        return b
-    }()
-    @objc func increment() {
-        count += 1
+
+    @IBAction func cameraButtonPressed(_ sender: Any) {
+
+         if UIImagePickerController.isSourceTypeAvailable(.camera){
+            imagePickers?.takePicture()
+
+         } else{
+
+          //Camera not available.
+        }
     }
 }
