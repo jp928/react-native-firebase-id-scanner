@@ -1,19 +1,7 @@
 require "json"
 
-package = JSON.parse(File.read(File.join(__dir__, "package.json")))
-
-appPackage = JSON.parse(File.read(File.join('..', 'app', 'package.json')))
-
-coreVersionDetected = appPackage['version']
-coreVersionRequired = package['peerDependencies'][appPackage['name']]
-if appPackage['sdkVersions']
-  firebase_sdk_version = appPackage['sdkVersions']['ios']['firebase']
-else
-  firebase_sdk_version = '~> 6.25.0'
-end
-if coreVersionDetected != coreVersionRequired
-  Pod::UI.warn "NPM package '#{package['name']}' depends on '#{appPackage['name']}' v#{coreVersionRequired} but found v#{coreVersionDetected}, this might cause build issues or runtime crashes."
-end
+package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
+firebase_sdk_version = package['sdkVersions']['ios']['firebase'] || '~> 6.25.0'
 
 Pod::Spec.new do |s|
   s.name         = "react-native-firebase-id-scanner"
@@ -32,17 +20,10 @@ Pod::Spec.new do |s|
   # React Native dependencies
   s.dependency          'React'
 
-  if defined?($FirebaseSDKVersion)
-    Pod::UI.puts "#{s.name}: Using user specified Firebase SDK version '#{$FirebaseSDKVersion}'"
-    firebase_sdk_version = $FirebaseSDKVersion
-  end
-
   # Firebase dependencies
   s.dependency          'Firebase/CoreOnly', firebase_sdk_version
   s.dependency          'Firebase/MLVision', firebase_sdk_version
-  if FirebaseJSON::Config.get_value_or_default('ml_vision_ocr_model', false)
-    s.dependency          'Firebase/MLVisionTextModel', firebase_sdk_version
-  end
+  s.dependency          'Firebase/MLVisionTextModel', firebase_sdk_version
 
   if defined?($RNFirebaseAsStaticFramework)
     Pod::UI.puts "#{s.name}: Using overridden static_framework value of '#{$RNFirebaseAsStaticFramework}'"
