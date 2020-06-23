@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import FirebaseIdScanner from 'react-native-firebase-id-scanner';
+import { FirebaseIdScanner, Scanner } from 'react-native-firebase-id-scanner';
 
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
@@ -11,7 +11,26 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <View
+        style={{
+          flex: 1,
+          width: '100%',
+          backgroundColor: 'yellow',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Text>Result: {result}</Text>
+      </View>
+      <Scanner
+        style={{
+          flex: 1,
+          width: '100%',
+          backgroundColor: 'blue',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      />
     </View>
   );
 }
@@ -21,5 +40,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    // backgroundColor: 'green',
   },
 });
