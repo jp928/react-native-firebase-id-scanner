@@ -9,6 +9,7 @@
 @objc(ScannerViewManager)
 class ScannerViewManager: RCTViewManager {
   override func view() -> UIView! {
-    return ScannerView().view
+//    return ScannerViewController().view
+    return ScannerView()
   }
 }

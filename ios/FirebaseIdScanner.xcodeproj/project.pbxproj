@@ -11,8 +11,8 @@
 		44C954E624A1BFB000DAF33E /* ScannerViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C954E524A1BFB000DAF33E /* ScannerViewManager.swift */; };
 		44C954E824A1C51300DAF33E /* ScannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C954E724A1C51300DAF33E /* ScannerView.m */; };
 		44C954EA24A1E14700DAF33E /* +UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C954E924A1E14700DAF33E /* +UIImage.swift */; };
-		44C954F224A1FA0B00DAF33E /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C954F024A1F04E00DAF33E /* ScannerView.swift */; };
-		F4FF95D7245B92E800C19C63 /* FirebaseIdScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* FirebaseIdScanner.swift */; };
+		44C954F224A1FA0B00DAF33E /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C954F024A1F04E00DAF33E /* ScannerViewController.swift */; };
+		AFDE2E4924A3046C00AA9A76 /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDE2E4824A3046C00AA9A76 /* ScannerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -34,10 +34,10 @@
 		44C954E724A1C51300DAF33E /* ScannerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScannerView.m; sourceTree = "<group>"; };
 		44C954E924A1E14700DAF33E /* +UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIImage.swift"; sourceTree = "<group>"; };
 		44C954EC24A1E9CC00DAF33E /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
-		44C954F024A1F04E00DAF33E /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
-		B3E7B5891CC2AC0600A0062D /* FirebaseIdScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirebaseIdScanner.m; sourceTree = "<group>"; };
+		44C954F024A1F04E00DAF33E /* ScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
+		AFDE2E4624A301C600AA9A76 /* React */ = {isa = PBXFileReference; lastKnownFileType = folder; name = React; path = "../node_modules/react-native/React"; sourceTree = "<group>"; };
+		AFDE2E4824A3046C00AA9A76 /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* FirebaseIdScanner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FirebaseIdScanner-Bridging-Header.h"; sourceTree = "<group>"; };
-		F4FF95D6245B92E800C19C63 /* FirebaseIdScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseIdScanner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,17 +62,25 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				44C954F024A1F04E00DAF33E /* ScannerView.swift */,
+				AFDE2E4824A3046C00AA9A76 /* ScannerView.swift */,
+				44C954F024A1F04E00DAF33E /* ScannerViewController.swift */,
 				44C954EC24A1E9CC00DAF33E /* Icons.xcassets */,
 				44C954E924A1E14700DAF33E /* +UIImage.swift */,
 				44C954E724A1C51300DAF33E /* ScannerView.m */,
 				44C954E524A1BFB000DAF33E /* ScannerViewManager.swift */,
 				44C954E124A1B67100DAF33E /* ScaledElementProcessor.swift */,
-				F4FF95D6245B92E800C19C63 /* FirebaseIdScanner.swift */,
-				B3E7B5891CC2AC0600A0062D /* FirebaseIdScanner.m */,
 				F4FF95D5245B92E700C19C63 /* FirebaseIdScanner-Bridging-Header.h */,
 				134814211AA4EA7D00B7C361 /* Products */,
+				AFDE2E4524A301C600AA9A76 /* Frameworks */,
 			);
+			sourceTree = "<group>";
+		};
+		AFDE2E4524A301C600AA9A76 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AFDE2E4624A301C600AA9A76 /* React */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -132,10 +140,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4FF95D7245B92E800C19C63 /* FirebaseIdScanner.swift in Sources */,
 				44C954E824A1C51300DAF33E /* ScannerView.m in Sources */,
 				44C954E624A1BFB000DAF33E /* ScannerViewManager.swift in Sources */,
-				44C954F224A1FA0B00DAF33E /* ScannerView.swift in Sources */,
+				44C954F224A1FA0B00DAF33E /* ScannerViewController.swift in Sources */,
+				AFDE2E4924A3046C00AA9A76 /* ScannerView.swift in Sources */,
 				44C954E224A1B67100DAF33E /* ScaledElementProcessor.swift in Sources */,
 				44C954EA24A1E14700DAF33E /* +UIImage.swift in Sources */,
 			);

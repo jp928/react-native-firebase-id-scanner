@@ -1,45 +1,59 @@
+//
+//  ScannerView.swift
+//  FirebaseIdScanner
+//
+//  Created by Jing Piao on 24/6/20.
+//  Copyright © 2020 Facebook. All rights reserved.
+//
+
 import UIKit
-import AVFoundation
 
-class ScannerView: UIViewController, UINavigationControllerDelegate,UIImagePickerControllerDelegate{
-
-//Camera Capture requiered properties
-var imagePickers:UIImagePickerController?
-
-@IBOutlet weak var customCameraView: UIView!
-
-override func viewDidLoad() {
-    addCameraInView()
-    super.viewDidLoad()
-}
-
-func addCameraInView(){
-
-    imagePickers = UIImagePickerController()
-    if UIImagePickerController.isCameraDeviceAvailable( UIImagePickerController.CameraDevice.rear) {
-        imagePickers?.delegate = self
-        imagePickers?.sourceType = UIImagePickerController.SourceType.camera
-
-        //add as a childviewcontroller
-        addChild(imagePickers!)
-
-        // Add the child's View as a subview
-        self.customCameraView.addSubview((imagePickers?.view)!)
-        imagePickers?.view.frame = customCameraView.bounds
-        imagePickers?.allowsEditing = false
-        imagePickers?.showsCameraControls = false
-        imagePickers?.view.autoresizingMask = [.flexibleWidth,  .flexibleHeight]
+class ScannerView: UIView {
+    weak var scannerViewController: ScannerViewController?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if scannerViewController == nil {
+            embed()
+        } else {
+            scannerViewController?.view.frame = bounds
         }
     }
-
-    @IBAction func cameraButtonPressed(_ sender: Any) {
-
-         if UIImagePickerController.isSourceTypeAvailable(.camera){
-            imagePickers?.takePicture()
-
-         } else{
-
-          //Camera not available.
+    
+    private func embed() {
+        guard
+            let parentVC = parentViewController
+        else {
+                return
         }
+        
+
+        let vc = ScannerViewController()
+        parentVC.addChild(vc)
+        addSubview(vc.view)
+        vc.view.frame = bounds
+        vc.didMove(toParent: parentVC)
+        self.scannerViewController = vc
+    }
+}
+
+extension UIView {
+    var parentViewController: UIViewController? {
+        var parentResponder: UIResponder? = self
+        while parentResponder != nil {
+            parentResponder = parentResponder!.next
+            if let viewController = parentResponder as? UIViewController {
+                return viewController
+            }
+        }
+        return nil
     }
 }
