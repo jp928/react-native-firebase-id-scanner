@@ -8,8 +8,14 @@
 
 import Foundation
 
-#if canImport(Firebase)
-    import Firebase
+#if canImport(FirebaseMLVision)
+import FirebaseMLVision
+
+struct ScaledElement {
+    let frame: CGRect
+    let shapeLayer: CALayer
+}
+
 
 class ScaledElementProcessor {
     let vision = Vision.vision()
@@ -37,15 +43,26 @@ class ScaledElementProcessor {
             }
             
             var scaledElements: [ScaledElement] = []
+            var likelyLicenseNo: String = "";
             for block in result.blocks {
                 for line in block.lines {
                     for element in line.elements {
+                        // detect if it is possible a license number
+                        let elementText = element.text
+                        var isLikelyLicenseNo = false;
+                        if (self.validate(elementText)) {
+                            isLikelyLicenseNo = true;
+                            
+                            // remove all spaces
+                            likelyLicenseNo = elementText.filter { !$0.isWhitespace }
+                        }
+                        
                         let frame = self.createScaledFrame(
                             featureFrame: element.frame,
                             imageSize: image.size,
                             viewFrame: imageView.frame)
                         
-                        let shapeLayer = self.createShapeLayer(frame: frame)
+                        let shapeLayer = self.createShapeLayer(frame: frame, isLikelyLicenseNo: isLikelyLicenseNo)
                         let scaledElement = ScaledElement(frame: frame, shapeLayer: shapeLayer)
                         scaledElements.append(scaledElement)
                     }
@@ -53,16 +70,29 @@ class ScaledElementProcessor {
                 }
             }
             
-            callback(result.text, scaledElements)
+            callback(likelyLicenseNo, scaledElements)
         }
     }
     
     // MARK: - private
-    private func createShapeLayer(frame: CGRect) -> CAShapeLayer {
+    private func validate(_ str: String) -> Bool {
+        guard let regex = try? NSRegularExpression(pattern: "^(\\s*\\d\\s*){8,9}$") else { return false }
+        let range = NSRange(location: 0, length: str.utf16.count)
+        return regex.firstMatch(in: str, options: [], range: range) != nil
+    }
+    
+    // MARK: - private
+    private func createShapeLayer(frame: CGRect, isLikelyLicenseNo: Bool) -> CAShapeLayer {
         let bpath = UIBezierPath(rect: frame)
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = bpath.cgPath
-        shapeLayer.strokeColor = Constants.lineColor
+        
+        if (isLikelyLicenseNo) {
+             shapeLayer.strokeColor = Constants.licenseNoColor
+        } else {
+            shapeLayer.strokeColor = Constants.lineColor
+        }
+
         shapeLayer.fillColor = Constants.fillColor
         shapeLayer.lineWidth = Constants.lineWidth
         return shapeLayer
@@ -73,6 +103,7 @@ class ScaledElementProcessor {
         static let lineWidth: CGFloat = 3.0
         static let lineColor = UIColor.yellow.cgColor
         static let fillColor = UIColor.clear.cgColor
+        static let licenseNoColor = UIColor.orange.cgColor
     }
     
     // MARK: - private
@@ -108,7 +139,5 @@ class ScaledElementProcessor {
                           width: featureWidthScaled,
                           height: featureHeightScaled)
     }
-    
-    
 }
 #endif

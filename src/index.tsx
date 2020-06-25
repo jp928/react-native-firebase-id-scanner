@@ -1,11 +1,10 @@
+import React from 'react';
 import { requireNativeComponent } from 'react-native';
 
-// type FirebaseIdScannerType = {
-//   multiply(a: number, b: number): Promise<number>;
-// };
-
-// const { FirebaseIdScanner } = NativeModules;
 const Scanner = requireNativeComponent('ScannerView');
 
-// export { FirebaseIdScanner };
-export { Scanner };
+const IdScanner = ({ ...props }) => {
+  return <Scanner {...props} />;
+};
+
+export default IdScanner;

@@ -1,16 +1,18 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Scanner } from 'react-native-firebase-id-scanner';
+import { StyleSheet, View, ViewStyle } from 'react-native';
+import IdScanner from 'react-native-firebase-id-scanner';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Scanner
-        style={{
-          flex: 1,
-          width: '100%',
-          backgroundColor: 'yellow',
-        }}
+      <IdScanner
+        style={
+          {
+            flex: 1,
+            width: '100%',
+            backgroundColor: '#eee',
+          } as ViewStyle
+        }
       />
     </View>
   );
