@@ -3,7 +3,7 @@ import { requireNativeComponent } from 'react-native';
 
 const Scanner = requireNativeComponent('ScannerView');
 
-const IdScanner = ({ ...props }) => {
+const IdScanner: React.FC<any> = ({ ...props }) => {
   return <Scanner {...props} />;
 };
 

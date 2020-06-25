@@ -3,10 +3,11 @@ import AVFoundation
 import MobileCoreServices
 
 class ScannerViewController: UIViewController {
+    var scannerView: ScannerView?;
     var imageView: UIImageView = UIImageView.init()
     var textView: UITextView = UITextView.init()
-    var button: UIButton!
     var screenWidth: CGFloat = UIScreen.main.bounds.width
+    var screenHeight: CGFloat = UIScreen.main.bounds.height
     
     let processor = ScaledElementProcessor()
     var frameSublayer = CALayer()
@@ -16,33 +17,34 @@ class ScannerViewController: UIViewController {
         }
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        button = UIButton(frame: CGRect(x: 100, y: 440, width: 100, height: 50))
+        addButton()
+        addImageView()
+        addTextView()
+        drawFeatures(in: imageView)
+    }
+    
+    func addButton() {
+        let button = UIButton(frame: CGRect(x: 100, y: screenHeight * 0.5 + 160, width: 100, height: 50))
         button.backgroundColor = .orange
         button.setTitle("Test Button!", for: .normal)
         button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         
         self.view.addSubview(button)
-        addImageView()
-        addTextView()
-        
-        //        imageView.layer.addSublayer(frameSublayer)
-        drawFeatures(in: imageView)
     }
     
     func addImageView(name:String = "default") {
         let image = UIImage(named: name)
         imageView.image = image
-        imageView.frame = CGRect(x: 40, y: 40, width: screenWidth - 80, height: 240)
+        imageView.frame = CGRect(x: 40, y: 40, width: screenWidth - 80, height: screenHeight * 0.5)
         view.addSubview(imageView)
         imageView.layer.addSublayer(frameSublayer)
     }
     
     func addTextView() {
-        textView.frame = CGRect(x: 40, y: 240, width: screenWidth - 80, height: 200)
+        textView.frame = CGRect(x: 40, y: screenHeight * 0.5 + 60, width: screenWidth - 80, height: 50)
         view.addSubview(textView)
     }
     
@@ -105,7 +107,9 @@ extension ScannerViewController: UIImagePickerControllerDelegate, UINavigationCo
             imageView.contentMode = .scaleAspectFit
             let fixedImage = pickedImage.fixOrientation()
             imageView.image = fixedImage
-            drawFeatures(in: imageView)
+            drawFeatures(in: imageView, completion: {
+                self.scannerView?.onHaveResult(self.scannedText)
+            })
         }
         dismiss(animated: true, completion: nil)
     }

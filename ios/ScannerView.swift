@@ -10,6 +10,7 @@ import UIKit
 
 class ScannerView: UIView {
     weak var scannerViewController: ScannerViewController?
+    @objc var onSuccess: RCTDirectEventBlock?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -31,17 +32,27 @@ class ScannerView: UIView {
     private func embed() {
         guard
             let parentVC = parentViewController
-        else {
+            else {
                 return
         }
         
-
+        
         let vc = ScannerViewController()
+        vc.scannerView = self
+        
         parentVC.addChild(vc)
         addSubview(vc.view)
         vc.view.frame = bounds
         vc.didMove(toParent: parentVC)
         self.scannerViewController = vc
+    }
+    
+    func onHaveResult(_ result: String) {
+        print("set onPress")
+        let dict:[String:String] = [
+            "result": result,
+        ]
+        onSuccess!(dict);
     }
 }
 

@@ -8,8 +8,7 @@
 
 @objc(ScannerViewManager)
 class ScannerViewManager: RCTViewManager {
-  override func view() -> UIView! {
-//    return ScannerViewController().view
-    return ScannerView()
-  }
+    override func view() -> UIView! {
+        return ScannerView()
+    }
 }

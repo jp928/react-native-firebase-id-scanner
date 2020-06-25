@@ -29,6 +29,7 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libFirebaseIdScanner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFirebaseIdScanner.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		440CDC8D24A4717F00420F9B /* ScannerModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScannerModule.h; sourceTree = "<group>"; };
 		44C954E124A1B67100DAF33E /* ScaledElementProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaledElementProcessor.swift; sourceTree = "<group>"; };
 		44C954E524A1BFB000DAF33E /* ScannerViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewManager.swift; sourceTree = "<group>"; };
 		44C954E724A1C51300DAF33E /* ScannerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScannerView.m; sourceTree = "<group>"; };
@@ -62,6 +63,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				440CDC8D24A4717F00420F9B /* ScannerModule.h */,
 				AFDE2E4824A3046C00AA9A76 /* ScannerView.swift */,
 				44C954F024A1F04E00DAF33E /* ScannerViewController.swift */,
 				44C954EC24A1E9CC00DAF33E /* Icons.xcassets */,

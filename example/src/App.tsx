@@ -13,6 +13,10 @@ export default function App() {
             backgroundColor: '#eee',
           } as ViewStyle
         }
+        onSuccess={(e: any) => {
+          const { nativeEvent } = e;
+          console.log(nativeEvent.result);
+        }}
       />
     </View>
   );
