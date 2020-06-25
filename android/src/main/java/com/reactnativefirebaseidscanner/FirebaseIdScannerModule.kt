@@ -13,12 +13,12 @@ class FirebaseIdScannerModule(reactContext: ReactApplicationContext) : ReactCont
 
     // Example method
     // See https://facebook.github.io/react-native/docs/native-modules-android
-    @ReactMethod
-    fun multiply(a: Int, b: Int, promise: Promise) {
-    
-      promise.resolve(a * b)
-    
-    }
+//    @ReactMethod
+//    fun multiply(a: Int, b: Int, promise: Promise) {
+//
+//      promise.resolve(a * b)
+//
+//    }
 
-    
+
 }

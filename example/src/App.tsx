@@ -10,7 +10,7 @@ export default function App() {
           {
             flex: 1,
             width: '100%',
-            backgroundColor: '#eee',
+            backgroundColor: 'blue',
           } as ViewStyle
         }
         onSuccess={(e: any) => {
@@ -27,6 +27,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: 'green',
+    backgroundColor: 'green',
   },
 });
