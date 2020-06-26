@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Rect
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,7 +26,7 @@ class ScannerView constructor(
 
   lateinit var imageView: ImageView
   lateinit var editText: EditText
-
+  lateinit var overlay: Overlay
 
   init {
     LayoutInflater.from(context)
@@ -35,6 +36,7 @@ class ScannerView constructor(
 
     imageView = findViewById(R.id.imageView)
     editText = findViewById(R.id.editText)
+    overlay = findViewById(R.id.overlay)
 
     val selectImageBtn = findViewById<Button>(R.id.select_image_btn)
 
@@ -102,6 +104,14 @@ class ScannerView constructor(
       return reactContext.currentActivity
     }
     return null
+  }
+
+  fun showHandle(text: String, boundingBox: Rect?) {
+    overlay.addText(text, boundingBox)
+  }
+
+  fun showBox(boundingBox: Rect?) {
+    overlay.addBox(boundingBox)
   }
 
 }

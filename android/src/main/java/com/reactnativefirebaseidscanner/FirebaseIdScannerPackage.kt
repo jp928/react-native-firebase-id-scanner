@@ -18,7 +18,7 @@ class FirebaseIdScannerPackage : ReactPackage {
 
     override fun createViewManagers(reactContext: ReactApplicationContext): MutableList<ViewManager<out View, out ReactShadowNode<*>>> {
       return mutableListOf(
-        ScannerViewManager()
+        ScannerViewManager(reactContext)
       )
     }
 }
