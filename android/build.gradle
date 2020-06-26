@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 buildscript {
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
   def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['FirebaseIdScanner_kotlinVersion']
@@ -9,6 +11,7 @@ buildscript {
 
   dependencies {
     classpath 'com.android.tools.build:gradle:3.2.1'
+//    classpath('com.google.gms:google-services:4.3.3')
     // noinspection DifferentKotlinGradleVersion
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
@@ -33,9 +36,9 @@ android {
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
     versionCode 1
     versionName "1.0"
-    
+
   }
-  
+
   buildTypes {
     release {
       minifyEnabled false
@@ -121,10 +124,17 @@ repositories {
   }
 }
 
-def kotlin_version = getExtOrDefault('kotlinVersion')
+def kotlinVersion = getExtOrDefault('kotlinVersion')
+
+def packageSlurper = new JsonSlurper()
+def packageJson = packageSlurper.parse file('../package.json')
+def firebaseVersion =  packageJson['sdkVersions']['android']['firebase']  ?  packageJson['sdkVersions']['android']['firebase'] : "24.0.3"
 
 dependencies {
   // noinspection GradleDynamicVersion
   api 'com.facebook.react:react-native:+'
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+  implementation "com.google.firebase:firebase-ml-vision:$firebaseVersion"
 }
+
+//apply plugin: 'com.google.gms.google-services'

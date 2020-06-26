@@ -13,13 +13,12 @@ import com.facebook.react.uimanager.ReactShadowNode
 
 class FirebaseIdScannerPackage : ReactPackage {
     override fun createNativeModules(reactContext: ReactApplicationContext): MutableList<NativeModule> {
-//        return Arrays.asList<NativeModule>(FirebaseIdScannerModule(reactContext))
       return mutableListOf()
     }
 
     override fun createViewManagers(reactContext: ReactApplicationContext): MutableList<ViewManager<out View, out ReactShadowNode<*>>> {
       return mutableListOf(
-        ScannerViewManager() // implemented later
+        ScannerViewManager()
       )
     }
 }

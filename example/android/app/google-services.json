@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "889420277096",
+    "firebase_url": "https://fir-idscannerexample.firebaseio.com",
+    "project_id": "fir-idscannerexample",
+    "storage_bucket": "fir-idscannerexample.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:889420277096:android:4e72c9aefc1cc12a50e2dd",
+        "android_client_info": {
+          "package_name": "com.example.reactnativefirebaseidscanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "889420277096-38hnrjj60qa5m32gaml9ilbd6obnv201.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCheJuksy1jDvmb9SGkityg4F6BWrvWI2Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "889420277096-38hnrjj60qa5m32gaml9ilbd6obnv201.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
