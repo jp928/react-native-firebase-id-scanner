@@ -1,11 +1,19 @@
 import * as React from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
-import IdScanner from 'react-native-firebase-id-scanner';
+import { StyleSheet, View, ViewStyle, TouchableOpacity, Text } from 'react-native';
+import IdScanner, { FirebaseIdScanner } from 'react-native-firebase-id-scanner';
 
 export default function App() {
+  const onPress = () => {
+    // console.log('hello world');
+    FirebaseIdScanner.openCamera();
+  };
+
   return (
     <View style={styles.container}>
-      <IdScanner
+      <TouchableOpacity onPress={onPress}>
+        <Text>Try Me</Text>
+      </TouchableOpacity>
+      {/* <IdScanner
         style={
           {
             flex: 1,
@@ -17,7 +25,7 @@ export default function App() {
           const { nativeEvent } = e;
           console.log(nativeEvent.result);
         }}
-      />
+      /> */}
     </View>
   );
 }

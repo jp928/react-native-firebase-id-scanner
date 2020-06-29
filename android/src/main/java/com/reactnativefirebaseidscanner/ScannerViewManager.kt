@@ -23,7 +23,7 @@ class ScannerViewManager constructor(
   }
 
   private fun resizeImage(selectedImage: Bitmap): Bitmap? {
-    return selectedImage?.let {
+    return selectedImage.let {
 
       val scaleFactorX =  it.width.toFloat() / scannerView.imageView.width.toFloat()
       val scaleFactorY = it.height.toFloat() / scannerView.imageView.height.toFloat()
@@ -42,25 +42,25 @@ class ScannerViewManager constructor(
     override fun onActivityResult(activity: Activity, requestCode: Int, resultCode: Int, intent: Intent) {
       when (requestCode) {
         1 -> if (resultCode == Activity.RESULT_OK) {
-          val imageBitmap = intent.extras.get("data") as Bitmap
-
-          val resizedImage = resizeImage(imageBitmap)
-          scannerView.imageView.setImageBitmap(resizedImage)
-          scannerView.overlay.clear()
-          scannerView.editText.setText("")
-          presenter.runTextRecognition(imageBitmap)
+          (intent.data as Bitmap).also {
+            processImage(it)
+          }
         }
 
         2 -> if (resultCode == Activity.RESULT_OK) {
-          val imageBitmap = getBitmapFromUri(intent!!.data)!!
-          val resizedImage = resizeImage(imageBitmap)
-          scannerView.imageView.setImageBitmap(resizedImage)
-          scannerView.overlay.clear()
-          scannerView.editText.setText("")
-          presenter.runTextRecognition(imageBitmap)
+          val imageBitmap = getBitmapFromUri(intent.data as Uri)!!
+          processImage(imageBitmap)
         }
       }
     }
+  }
+
+  private fun processImage(imageBitmap: Bitmap) {
+    val resizedImage = resizeImage(imageBitmap)
+    scannerView.imageView.setImageBitmap(resizedImage)
+    scannerView.overlay.clear()
+    scannerView.editText.setText("")
+    presenter.runTextRecognition(imageBitmap)
   }
 
   init {

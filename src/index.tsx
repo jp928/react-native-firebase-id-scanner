@@ -1,7 +1,8 @@
 import React from 'react';
-import { requireNativeComponent } from 'react-native';
+import { requireNativeComponent, NativeModules } from 'react-native';
 
 const Scanner = requireNativeComponent('ScannerView');
+export const { FirebaseIdScanner } = NativeModules;
 
 const IdScanner: React.FC<any> = ({ ...props }) => {
   return <Scanner {...props} />;
