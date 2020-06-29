@@ -1,57 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical"
   android:padding="15dp">
 
-  <ImageView
-    android:id="@+id/imageView"
-    android:layout_width="match_parent"
-    android:layout_height="250dp"
-    android:src="@drawable/card"
-    android:layout_centerHorizontal="true"/>
+  <include layout="@layout/preview" />
 
-  <com.reactnativefirebaseidscanner.Overlay
-    android:id="@+id/overlay"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentStart="true"
-    android:layout_alignParentTop="true"
-    android:layout_alignParentLeft="true" />
-
-  <LinearLayout
-    android:id="@+id/actionContainer"
-    android:layout_width="match_parent"
+  <Button
+    android:id="@+id/select_image_btn"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/imageView"
-    android:orientation="horizontal">
+    android:text="Recognize Text"
+    app:layout_constraintBottom_toTopOf="@+id/editText"
+    app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="Select Image"
-      android:id="@+id/select_image_btn"
-      />
-    <Button
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="Recognize Text"
-      android:onClick="startRecognizing"/>
-  </LinearLayout>
+  <Button
+    android:id="@+id/take_photo_btn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Take photo"
+    app:layout_constraintBottom_toTopOf="@+id/editText"
+    app:layout_constraintStart_toStartOf="parent" />
 
 
   <EditText
     android:id="@+id/editText"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@+id/actionContainer"
+    android:layout_height="100pt"
     android:background="@android:color/transparent"
     android:gravity="top"
+    android:hint="Detected text will appear here."
     android:inputType="textMultiLine"
     android:padding="10dp"
-    android:hint="Detected text will appear here."/>
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
 
-</RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

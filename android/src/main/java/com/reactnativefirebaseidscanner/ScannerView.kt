@@ -7,38 +7,36 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.facebook.react.bridge.ActivityEventListener
-import com.facebook.react.bridge.BaseActivityEventListener
 import com.facebook.react.bridge.ReactContext
 
 
 class ScannerView constructor(
   context: Context
-) : LinearLayout(context) {
+) : ConstraintLayout(context) {
 
-  lateinit var imageView: ImageView
-  lateinit var editText: EditText
-  lateinit var overlay: Overlay
+  var imageView: ImageView
+  var editText: EditText
+  var overlay: Overlay
+  val TAKE_PHOTO_ACTION = 1
+  val SELECT_PHOTO_ACTION = 2
 
   init {
     LayoutInflater.from(context)
       .inflate(R.layout.scanner, this, true)
-
-    orientation = VERTICAL
 
     imageView = findViewById(R.id.imageView)
     editText = findViewById(R.id.editText)
     overlay = findViewById(R.id.overlay)
 
     val selectImageBtn = findViewById<Button>(R.id.select_image_btn)
+    val takePhotoBtn = findViewById<Button>(R.id.take_photo_btn)
 
     val permissionCheck: Int = ContextCompat.checkSelfPermission(
       getContext(),
@@ -52,47 +50,19 @@ class ScannerView constructor(
       }
     }
 
-// set on-click listener
+    // set on-click listener
+    takePhotoBtn.setOnClickListener {
+      getActivity()?.startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE), TAKE_PHOTO_ACTION, null)
+    }
+
+    // set on-click listener
     selectImageBtn.setOnClickListener {
-      getActivity()?.startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE), 1, null)
+      val intent = Intent()
+      intent.type = "image/*"
+      intent.action = Intent.ACTION_GET_CONTENT
+      getActivity()?.startActivityForResult(intent, SELECT_PHOTO_ACTION, null)
     }
   }
-
-
-
-//  fun startRecognizing(v: View) {
-//    if (imageView.drawable != null) {
-//      editText.setText("")
-//      v.isEnabled = false
-//      val bitmap = (imageView.drawable as BitmapDrawable).bitmap
-//      val image = FirebaseVisionImage.fromBitmap(bitmap)
-//      val detector = FirebaseVision.getInstance().onDeviceTextRecognizer
-//
-//      detector.processImage(image)
-//        .addOnSuccessListener { firebaseVisionText ->
-//          v.isEnabled = true
-//          processResultText(firebaseVisionText)
-//        }
-//        .addOnFailureListener {
-//          v.isEnabled = true
-//          editText.setText("Failed")
-//        }
-//    } else {
-//      Toast.makeText(this.context, "Select an Image First", Toast.LENGTH_LONG).show()
-//    }
-
-//  }
-
-//  private fun processResultText(resultText: FirebaseVisionText) {
-//    if (resultText.textBlocks.size == 0) {
-//      editText.setText("No Text Found")
-//      return
-//    }
-//    for (block in resultText.textBlocks) {
-//      val blockText = block.text
-//      editText.append(blockText + "\n")
-//    }
-//  }
 
   private fun getActivity(): Activity? {
     val context = context
@@ -104,6 +74,14 @@ class ScannerView constructor(
       return reactContext.currentActivity
     }
     return null
+  }
+
+  fun setScaleFactorX(scaleFactor: Float) {
+    overlay.scaleFactorX = scaleFactor
+  }
+
+  fun setScaleFactorY(scaleFactor: Float) {
+    overlay.scaleFactorY = scaleFactor
   }
 
   fun showHandle(text: String, boundingBox: Rect?) {
