@@ -4,11 +4,13 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment
+import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.facebook.react.ReactActivity
+import com.facebook.react.bridge.WritableMap
+import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import io.fotoapparat.Fotoapparat
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.log.logcat
@@ -20,13 +22,10 @@ import io.fotoapparat.selector.off
 import io.fotoapparat.selector.torch
 import io.fotoapparat.view.CameraView
 import io.fotoapparat.view.FocusView
-import java.io.File
 
-class CameraActivity : AppCompatActivity() {
+
+class CameraActivity : ReactActivity() {
   var fotoapparat: Fotoapparat? = null
-  val filename = "test.png"
-  val sd = Environment.getExternalStorageDirectory()
-  val dest = File(sd, filename)
   var fotoapparatState: FotoapparatState? = null
   var cameraStatus: CameraState? = null
   var flashState: FlashState? = null
@@ -67,6 +66,15 @@ class CameraActivity : AppCompatActivity() {
 //    fab_flash.setOnClickListener {
 //      changeFlashState()
 //    }
+  }
+
+  private fun sendResult(map: WritableMap) {
+    Log.v("test", "Here")
+    reactInstanceManager.currentReactContext
+      ?.getJSModule(RCTDeviceEventEmitter::class.java)
+            ?.emit("onSuccess", map)
+
+    this.finish()
   }
 
   private fun createFotoapparat() {
@@ -117,7 +125,7 @@ class CameraActivity : AppCompatActivity() {
       ?.takePicture()
       ?.toBitmap()
       ?.whenAvailable { bitmapPhoto ->
-        presenter.runTextRecognition(bitmapPhoto!!.bitmap)
+        presenter.runTextRecognition(bitmapPhoto!!.bitmap, this::sendResult)
       }
   }
 

@@ -1,6 +1,7 @@
 package com.reactnativefirebaseidscanner
 
 import android.graphics.Bitmap
+import android.util.Log
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
 import com.google.firebase.ml.vision.FirebaseVision
@@ -14,12 +15,15 @@ class ImageProcessPresenterPresenter() {
 
 //  var activity: AppCompatActivity? null
 
-  fun runTextRecognition(selectedImage: Bitmap) {
+  fun runTextRecognition(selectedImage: Bitmap, callback: ((map: WritableMap) -> Unit)? = null) {
     val image = FirebaseVisionImage.fromBitmap(selectedImage)
     val detector = FirebaseVision.getInstance().onDeviceTextRecognizer
     detector.processImage(image)
       .addOnSuccessListener { texts ->
-        this.processTextRecognitionResult(texts)
+        val map = this.processTextRecognitionResult(texts)
+        if (callback != null) {
+          callback(map)
+        }
       }
       .addOnFailureListener { e ->
         // Task failed with an exception
@@ -27,7 +31,7 @@ class ImageProcessPresenterPresenter() {
       }
   }
 
-  private fun processTextRecognitionResult(texts: FirebaseVisionText) {
+  private fun processTextRecognitionResult(texts: FirebaseVisionText): WritableMap {
 //    if (texts.textBlocks.size == 0) {
 //      view.editText.setText("No Text Found!!!!")
 //      return
@@ -78,17 +82,17 @@ class ImageProcessPresenterPresenter() {
       }
     }
 
-//    val map: WritableMap = Arguments.createMap()
-//    map.putString("licenseNo", licenseNo)
-//    map.putString("dob", dob)
-//    map.putString("expiry", expiry)
+    Log.v("test", licenseNo)
+    Log.v("test", dob)
+    Log.v("test", expiry)
+    Log.v("test", text)
 
-//    activity.sendResult(map)
-//    val intent = Intent()
-//    intent.setAction("")
+    val map: WritableMap = Arguments.createMap()
+    map.putString("licenseNo", licenseNo)
+    map.putString("dob", dob)
+    map.putString("expiry", expiry)
 
-//    activity?.finish()
-
+    return map
   }
 
 

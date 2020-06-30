@@ -1,6 +1,9 @@
 import * as React from 'react';
-import { StyleSheet, View, ViewStyle, TouchableOpacity, Text } from 'react-native';
-import IdScanner, { FirebaseIdScanner } from 'react-native-firebase-id-scanner';
+import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import {
+  FirebaseIdScanner,
+  FirebaseEvent,
+} from 'react-native-firebase-id-scanner';
 
 export default function App() {
   const onPress = () => {
@@ -9,9 +12,13 @@ export default function App() {
   };
 
   React.useEffect(() => {
+    console.log('here');
+    const listener = FirebaseEvent.addListener('onSccuess', (data) => {
+      console.log(data);
+    });
 
+    return () => listener.remove();
   }, []);
-  
 
   return (
     <View style={styles.container}>
