@@ -1,15 +1,29 @@
 package com.reactnativefirebaseidscanner
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.provider.MediaStore
-import com.facebook.react.bridge.Callback
-import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.*
 
 class FirebaseIdScannerModule constructor(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
   override fun getName(): String {
     return "FirebaseIdScanner"
+  }
+
+  private val mActivityEventListener: ActivityEventListener = object : BaseActivityEventListener() {
+    override fun onActivityResult(activity: Activity, requestCode: Int, resultCode: Int, intent: Intent) {
+      when (requestCode) {
+        101 -> if (resultCode == Activity.RESULT_OK) {
+
+        }
+      }
+    }
+  }
+
+  init {
+      reactContext.addActivityEventListener(mActivityEventListener)
   }
 
   private var callback: Callback? = null
@@ -17,9 +31,6 @@ class FirebaseIdScannerModule constructor(reactContext: ReactApplicationContext)
 
   @ReactMethod
   fun openCamera() {
-//    this.callback = callback
-//    this.errorCallback = errorCallback
-
     val intent = Intent(currentActivity, CameraActivity::class.java)
     currentActivity!!.startActivity(intent)
   }

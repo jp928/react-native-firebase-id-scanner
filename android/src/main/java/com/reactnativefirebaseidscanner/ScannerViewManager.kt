@@ -70,7 +70,8 @@ class ScannerViewManager constructor(
   override fun getName() = "ScannerView"
   override fun createViewInstance(reactContext: ThemedReactContext): ScannerView {
     scannerView = ScannerView(reactContext)
-    this.presenter = ImageProcessPresenterPresenter(scannerView)
+    presenter = ImageProcessPresenterPresenter()
+    presenter.view = scannerView
     return scannerView
   }
 }

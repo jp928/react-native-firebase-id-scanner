@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:orientation="horizontal"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-  >
+  android:background="#282828" >
   <io.fotoapparat.view.CameraView
     android:id="@+id/camera_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:layout_height="match_parent" >
+    <io.fotoapparat.view.FocusView
+      android:id="@+id/focus_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent" />
 
-  <Button
-    android:id="@+id/button_capture"
-    android:text="Capture"
+  </io.fotoapparat.view.CameraView>
+
+  <com.google.android.material.floatingactionbutton.FloatingActionButton
+    android:id="@+id/fab_capture"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    />
-</LinearLayout>
+    app:fabSize="normal"
+    android:src="@drawable/ic_capture"
+    android:layout_gravity="end|bottom"
+    android:layout_alignParentBottom="true"
+    android:layout_margin="32dp"
+    android:layout_centerHorizontal="true"
+    app:backgroundTint="@android:color/white"/>
+</RelativeLayout>

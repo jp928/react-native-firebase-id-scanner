@@ -8,6 +8,11 @@ export default function App() {
     FirebaseIdScanner.openCamera();
   };
 
+  React.useEffect(() => {
+
+  }, []);
+  
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onPress}>

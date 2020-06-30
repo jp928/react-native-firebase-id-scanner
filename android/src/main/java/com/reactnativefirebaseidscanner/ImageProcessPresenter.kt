@@ -1,13 +1,18 @@
 package com.reactnativefirebaseidscanner
 
 import android.graphics.Bitmap
-import android.graphics.Rect
-import android.util.Log
+import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.WritableMap
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.text.FirebaseVisionText
 
-class ImageProcessPresenterPresenter(private val view: ScannerView) {
+
+class ImageProcessPresenterPresenter() {
+
+  var view: ScannerView? = null
+
+//  var activity: AppCompatActivity? null
 
   fun runTextRecognition(selectedImage: Bitmap) {
     val image = FirebaseVisionImage.fromBitmap(selectedImage)
@@ -31,32 +36,58 @@ class ImageProcessPresenterPresenter(private val view: ScannerView) {
     for (block in texts.textBlocks) {
       for (line in block.lines) {
         for (element in line.elements) {
-//          Log.v("test", element.text)
-//          view.showHandle(element.text, element.boundingBox)
-          view.showBox(element.boundingBox)
+          view?.showBox(element.boundingBox)
+
           text += element.text
-//          view.editText.append(element.text)
-//          view.editText.append("\n")
         }
       }
     }
 
-    Log.v("test", text)
-    val matches = Regex("(?i)(LicenceNo)?(\\d{3}([a-z]|\\s+)?\\d{3}([a-z]|\\s+)?\\d{3})")
+    val driverLicenseNoMatches = Regex("(?i)(LicenceNo(\\.)?)?(\\d{3}([a-z]|\\s+)?\\d{3}([a-z]|\\s+)?\\d{2,3})")
         .findAll(text)
 
-    var result: String = ""
-    matches.forEach { matchResult ->
-      result = matchResult.value
-      Log.v("test", matchResult.value)
-      Log.v("test", matchResult.groupValues[1])
-      Log.v("test", matchResult.groupValues[2])
+    var licenseNo: String = ""
+    driverLicenseNoMatches.forEach { matchResult ->
+      licenseNo = matchResult.value
       if (matchResult.groupValues[1].isNotEmpty()) {
-        result = matchResult.groupValues[2]
+        licenseNo = matchResult.groupValues.takeLast(1).toString()
       }
     }
 
-    view.editText.append(result)
+    view?.editText?.append(licenseNo)
+
+    val dateOfBirthMathes = Regex("(?i)(DateofBirth|DOB)?(\\d{2}(?i)(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\\d{2,4})")
+      .findAll(text)
+
+    var dob = ""
+    dateOfBirthMathes.forEach { matchResult ->
+      dob = matchResult.value
+      if (matchResult.groupValues[1].isNotEmpty()) {
+        dob = matchResult.groupValues.takeLast(1).toString()
+      }
+    }
+
+    val expiryMatches = Regex("(?i)(ExpiryDate|Expiry)?((\\d{2}(?i)(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)(?:20[2-9][0-9]))|((?:0[1-9]|1[0-9]|2[0-8])[\\.](?:0[1-9]|1[012])[\\.](?:2[0-9]|3[0-9])))")
+      .findAll(text)
+
+    var expiry = ""
+    expiryMatches.forEach { matchResult ->
+      dob = matchResult.value
+      if (matchResult.groupValues[1].isNotEmpty()) {
+        expiry = matchResult.groupValues.takeLast(1).toString()
+      }
+    }
+
+//    val map: WritableMap = Arguments.createMap()
+//    map.putString("licenseNo", licenseNo)
+//    map.putString("dob", dob)
+//    map.putString("expiry", expiry)
+
+//    activity.sendResult(map)
+//    val intent = Intent()
+//    intent.setAction("")
+
+//    activity?.finish()
 
   }
 
