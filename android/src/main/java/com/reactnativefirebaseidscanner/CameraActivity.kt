@@ -69,11 +69,13 @@ class CameraActivity : ReactActivity() {
   }
 
   private fun sendResult(map: WritableMap) {
-    Log.v("test", "Here")
-    reactInstanceManager.currentReactContext
-      ?.getJSModule(RCTDeviceEventEmitter::class.java)
-            ?.emit("onSuccess", map)
+//    reactInstanceManager.currentReactContext
+//      ?.getJSModule(RCTDeviceEventEmitter::class.java)
+//            ?.emit("onSuccess", map)
 
+    // FirebaseIdScannerModule.eventEmitter?.emit("onSuccess", map)
+
+    FirebaseIdScannerModule.emitDeviceEvent("onSuccess", map)
     this.finish()
   }
 

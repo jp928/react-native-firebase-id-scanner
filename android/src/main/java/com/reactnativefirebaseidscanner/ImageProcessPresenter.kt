@@ -1,12 +1,20 @@
 package com.reactnativefirebaseidscanner
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.text.FirebaseVisionText
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.format.DateTimeParseException
+import java.util.*
 
 
 class ImageProcessPresenterPresenter() {
@@ -15,6 +23,7 @@ class ImageProcessPresenterPresenter() {
 
 //  var activity: AppCompatActivity? null
 
+  @RequiresApi(Build.VERSION_CODES.O)
   fun runTextRecognition(selectedImage: Bitmap, callback: ((map: WritableMap) -> Unit)? = null) {
     val image = FirebaseVisionImage.fromBitmap(selectedImage)
     val detector = FirebaseVision.getInstance().onDeviceTextRecognizer
@@ -31,6 +40,7 @@ class ImageProcessPresenterPresenter() {
       }
   }
 
+  @RequiresApi(Build.VERSION_CODES.O)
   private fun processTextRecognitionResult(texts: FirebaseVisionText): WritableMap {
 //    if (texts.textBlocks.size == 0) {
 //      view.editText.setText("No Text Found!!!!")
@@ -42,14 +52,13 @@ class ImageProcessPresenterPresenter() {
         for (element in line.elements) {
           view?.showBox(element.boundingBox)
 
-          text += element.text
+          text += element.text + "|"
         }
       }
     }
 
-    val driverLicenseNoMatches = Regex("(?i)(LicenceNo(\\.)?)?(\\d{3}([a-z]|\\s+)?\\d{3}([a-z]|\\s+)?\\d{2,3})")
-        .findAll(text)
-
+    val driverLicenseNoMatches = Regex("(?i)(LicenceNo(\\.)?)?(\\d{8,9})")
+      .findAll(text)
     var licenseNo: String = ""
     driverLicenseNoMatches.forEach { matchResult ->
       licenseNo = matchResult.value
@@ -58,42 +67,96 @@ class ImageProcessPresenterPresenter() {
       }
     }
 
-    view?.editText?.append(licenseNo)
 
-    val dateOfBirthMathes = Regex("(?i)(DateofBirth|DOB)?(\\d{2}(?i)(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\\d{2,4})")
+    val driverLicenseNoMatchesSecondary = Regex("(?i)(LicenceNo(\\.)?)?(\\d{3}([a-z]|\\s+|\\|)?\\d{3}([a-z]|\\s+|\\|)?\\d{2,3})")
       .findAll(text)
 
-    var dob = ""
-    dateOfBirthMathes.forEach { matchResult ->
-      dob = matchResult.value
-      if (matchResult.groupValues[1].isNotEmpty()) {
-        dob = matchResult.groupValues.takeLast(1).toString()
+    if (licenseNo.isEmpty()) {
+      driverLicenseNoMatchesSecondary.forEach { matchResult ->
+        licenseNo = matchResult.value
+        if (matchResult.groupValues[1].isNotEmpty()) {
+          licenseNo = matchResult.groupValues.takeLast(1).toString()
+        }
       }
     }
 
-    val expiryMatches = Regex("(?i)(ExpiryDate|Expiry)?((\\d{2}(?i)(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)(?:20[2-9][0-9]))|((?:0[1-9]|1[0-9]|2[0-8])[\\.](?:0[1-9]|1[012])[\\.](?:2[0-9]|3[0-9])))")
+    view?.editText?.append(licenseNo)
+
+    val dateFormatter: DateTimeFormatter = DateTimeFormatterBuilder()
+      .parseCaseInsensitive()
+      .parseLenient()
+//      .append(DateTimeFormatter.ofPattern("dd-MMM-yyyy"))
+//      .appendPattern("dd-MMM-yyyy")
+//      .appendPattern("dd-MM-yy")
+      .toFormatter(Locale.ENGLISH)
+
+
+    val dateOfBirthMatches = Regex("(?i)(Birth|DOB)?(\\|)(\\d{2}(?i)\\|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\\|\\d{2,4})")
+      .findAll(text)
+
+    var dob = ""
+    dateOfBirthMatches.forEach { matchResult ->
+      var dobLike = matchResult.value.removePrefix("|").replace("|", "-")
+      if (matchResult.groupValues[1].isNotEmpty()) {
+        dobLike = matchResult.groupValues.takeLast(1).toString().removePrefix("|").replace("|", "-")
+      }
+
+      if (parseDate(dobLike)!!.isBefore(LocalDate.now())) {
+        dob = dobLike
+      }
+    }
+
+    val expiryMatches = Regex("(?i)(ExpiryDate|Expiry)?((\\d{2}(?i)\\|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\\|(?:20[2-9][0-9]))|((?:0[1-9]|1[0-9]|2[0-8])[\\.](?:0[1-9]|1[012])[\\.](?:2[0-9]|3[0-9])))")
       .findAll(text)
 
     var expiry = ""
     expiryMatches.forEach { matchResult ->
-      dob = matchResult.value
+      var expiryLike = matchResult.value.removePrefix("|").replace("|", "-")
       if (matchResult.groupValues[1].isNotEmpty()) {
-        expiry = matchResult.groupValues.takeLast(1).toString()
+        expiryLike = matchResult.groupValues.takeLast(1).toString().removePrefix("|").replace("|", "-")
+      }
+
+      if (parseDate(expiryLike)!!.isAfter(LocalDate.now())) {
+        expiry = expiryLike
       }
     }
 
-    Log.v("test", licenseNo)
-    Log.v("test", dob)
-    Log.v("test", expiry)
-    Log.v("test", text)
+    Log.v("test1", licenseNo.replace("|", ""))
+    Log.v("test2", dob)
+    Log.v("test3", expiry)
+    Log.v("test4", text)
 
     val map: WritableMap = Arguments.createMap()
-    map.putString("licenseNo", licenseNo)
-    map.putString("dob", dob)
-    map.putString("expiry", expiry)
+    map.putString("licenseNo", licenseNo.replace("|", ""))
+    map.putString("dob", dob.replace("|", ""))
+    map.putString("expiry", expiry.replace("|", ""))
 
     return map
   }
 
+  @RequiresApi(Build.VERSION_CODES.O)
+  private val FORMATTERS: List<DateTimeFormatter> = Arrays.asList(
+    DateTimeFormatter.ofPattern("dd-MMM-yyyy"),
+    DateTimeFormatter.ofPattern("dd-MM-yy"),
+    DateTimeFormatter.ofPattern("dd-MM-yyyy")
+  )
 
+  @RequiresApi(Build.VERSION_CODES.O)
+  fun parseDate(inputString: String): LocalDate? {
+    for (formatter in FORMATTERS) {
+      try {
+        val format = DateTimeFormatterBuilder()
+          .parseCaseInsensitive()
+          .parseLenient()
+          .append(formatter)
+          .toFormatter(Locale.ENGLISH)
+
+        return LocalDate.parse(inputString, format)
+      } catch (@SuppressLint("NewApi") e: DateTimeParseException) {
+        Log.v("test", e.message)
+        // Go on to the next format
+      }
+    }
+    return null
+  }
 }

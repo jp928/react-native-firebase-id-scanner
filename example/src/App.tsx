@@ -7,15 +7,16 @@ import {
 
 export default function App() {
   const onPress = () => {
-    // console.log('hello world');
     FirebaseIdScanner.openCamera();
   };
 
   React.useEffect(() => {
-    console.log('here');
-    const listener = FirebaseEvent.addListener('onSccuess', (data) => {
-      console.log(data);
-    });
+    const listener = FirebaseEvent.addListener(
+      'onSuccess',
+      (data: Record<string, string>) => {
+        console.log(data);
+      }
+    );
 
     return () => listener.remove();
   }, []);

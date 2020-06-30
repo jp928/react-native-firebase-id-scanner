@@ -12,7 +12,7 @@ import com.facebook.react.bridge.JavaScriptModule
 import com.facebook.react.uimanager.ReactShadowNode
 
 class FirebaseIdScannerPackage : ReactPackage {
-    override fun createNativeModules(reactContext: ReactApplicationContext): MutableList<NativeModule> {
+    override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
       return Arrays.asList<NativeModule>(FirebaseIdScannerModule(reactContext))
     }
 

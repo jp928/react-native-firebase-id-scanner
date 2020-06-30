@@ -5,29 +5,36 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import com.facebook.react.bridge.*
+import com.facebook.react.modules.core.DeviceEventManagerModule
 
 class FirebaseIdScannerModule constructor(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
-  override fun getName(): String {
-    return "FirebaseIdScanner"
-  }
+  companion object {
+    // var eventEmitter: RCTDeviceEventEmitter? = null
 
-  private val mActivityEventListener: ActivityEventListener = object : BaseActivityEventListener() {
-    override fun onActivityResult(activity: Activity, requestCode: Int, resultCode: Int, intent: Intent) {
-      when (requestCode) {
-        101 -> if (resultCode == Activity.RESULT_OK) {
+    private var context: ReactApplicationContext? = null
 
-        }
-      }
+    fun emitDeviceEvent(eventName: String, eventData: WritableMap?) {
+      Log.v("test", eventName)
+      // A method for emitting from the native side to JS
+      // https://facebook.github.io/react-native/docs/native-modules-android.html#sending-events-to-javascript
+      context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit(eventName, eventData)
     }
   }
 
   init {
-      reactContext.addActivityEventListener(mActivityEventListener)
+    context = reactContext
   }
 
-  private var callback: Callback? = null
-  private var errorCallback: Callback? = null
+  override fun initialize() {
+    super.initialize()
+    // eventEmitter = reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+  }
+
+  override fun getName(): String {
+    return "FirebaseIdScanner"
+  }
 
   @ReactMethod
   fun openCamera() {
