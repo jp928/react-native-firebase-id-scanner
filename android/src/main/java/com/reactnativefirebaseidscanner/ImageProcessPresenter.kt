@@ -82,15 +82,6 @@ class ImageProcessPresenterPresenter() {
 
     view?.editText?.append(licenseNo)
 
-    val dateFormatter: DateTimeFormatter = DateTimeFormatterBuilder()
-      .parseCaseInsensitive()
-      .parseLenient()
-//      .append(DateTimeFormatter.ofPattern("dd-MMM-yyyy"))
-//      .appendPattern("dd-MMM-yyyy")
-//      .appendPattern("dd-MM-yy")
-      .toFormatter(Locale.ENGLISH)
-
-
     val dateOfBirthMatches = Regex("(?i)(Birth|DOB)?(\\|)(\\d{2}(?i)\\|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\\|\\d{2,4})")
       .findAll(text)
 
@@ -98,10 +89,17 @@ class ImageProcessPresenterPresenter() {
     dateOfBirthMatches.forEach { matchResult ->
       var dobLike = matchResult.value.removePrefix("|").replace("|", "-")
       if (matchResult.groupValues[1].isNotEmpty()) {
-        dobLike = matchResult.groupValues.takeLast(1).toString().removePrefix("|").replace("|", "-")
+        dobLike = matchResult.groupValues.takeLast(1)
+          .toString()
+          .removePrefix("|")
+          .replace("|", "-")
+          .replace("[", "")
+          .replace("]", "")
       }
 
-      if (parseDate(dobLike)!!.isBefore(LocalDate.now())) {
+      val parseDate = parseDate(dobLike)
+
+      if (parseDate?.isBefore(LocalDate.now()) == true) {
         dob = dobLike
       }
     }
@@ -113,23 +111,24 @@ class ImageProcessPresenterPresenter() {
     expiryMatches.forEach { matchResult ->
       var expiryLike = matchResult.value.removePrefix("|").replace("|", "-")
       if (matchResult.groupValues[1].isNotEmpty()) {
-        expiryLike = matchResult.groupValues.takeLast(1).toString().removePrefix("|").replace("|", "-")
+        expiryLike = matchResult.groupValues.takeLast(1)
+          .toString()
+          .removePrefix("|")
+          .replace("|", "-")
+          .replace("[", "")
+          .replace("]", "")
       }
 
-      if (parseDate(expiryLike)!!.isAfter(LocalDate.now())) {
+      val parseDate = parseDate(expiryLike)
+      if (parseDate?.isAfter(LocalDate.now()) == true) {
         expiry = expiryLike
       }
     }
 
-    Log.v("test1", licenseNo.replace("|", ""))
-    Log.v("test2", dob)
-    Log.v("test3", expiry)
-    Log.v("test4", text)
-
     val map: WritableMap = Arguments.createMap()
     map.putString("licenseNo", licenseNo.replace("|", ""))
-    map.putString("dob", dob.replace("|", ""))
-    map.putString("expiry", expiry.replace("|", ""))
+    map.putString("dob", dob)
+    map.putString("expiry", expiry)
 
     return map
   }
@@ -153,7 +152,7 @@ class ImageProcessPresenterPresenter() {
 
         return LocalDate.parse(inputString, format)
       } catch (@SuppressLint("NewApi") e: DateTimeParseException) {
-        Log.v("test", e.message)
+        Log.v("TextRecognition", "Cannot parse " + inputString + ":" + e.message)
         // Go on to the next format
       }
     }
